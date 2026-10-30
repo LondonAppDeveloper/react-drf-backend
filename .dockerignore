@@ -1,2 +1,7 @@
 README.md
 frontend/node_modules/
+**/myenv/
+**/__pycache__/
+**/*.pyc
+.git
+.gitignore

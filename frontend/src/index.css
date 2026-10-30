@@ -1,68 +1,237 @@
-:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
+@layer base {
   :root {
-    color: #213547;
-    background-color: #ffffff;
+    --background: 0 0% 98%;
+    --foreground: 0 0% 15%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 15%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 15%;
+
+    --primary: 351 71% 45%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 100 45% 25%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 0 0% 95%;
+    --muted-foreground: 0 0% 45%;
+
+    --accent: 25 85% 60%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
+    --ring: 351 71% 45%;
+
+    --radius: 0.5rem;
+
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 0 0% 20%;
+    --sidebar-primary: 351 71% 45%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 0 0% 96%;
+    --sidebar-accent-foreground: 0 0% 20%;
+    --sidebar-border: 0 0% 92%;
+    --sidebar-ring: 351 71% 45%;
+
+    --grouped-bg: 240 14% 96%;
+
+    --chart-1: 351 71% 45%;
+    --chart-2: 100 45% 25%;
+    --chart-3: 25 85% 60%;
+    --chart-4: 210 40% 50%;
+    --chart-5: 280 60% 50%;
   }
-  a:hover {
-    color: #747bff;
+
+  .dark {
+    --background: 0 0% 10%;
+    --foreground: 0 0% 95%;
+
+    --card: 0 0% 12%;
+    --card-foreground: 0 0% 95%;
+
+    --popover: 0 0% 12%;
+    --popover-foreground: 0 0% 95%;
+
+    --primary: 351 71% 55%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 100 45% 35%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 0 0% 18%;
+    --muted-foreground: 0 0% 60%;
+
+    --accent: 25 85% 65%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+
+    --border: 0 0% 20%;
+    --input: 0 0% 20%;
+    --ring: 351 71% 55%;
+
+    --sidebar-background: 0 0% 12%;
+    --sidebar-foreground: 0 0% 85%;
+    --sidebar-primary: 351 71% 55%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 0 0% 18%;
+    --sidebar-accent-foreground: 0 0% 85%;
+    --sidebar-border: 0 0% 18%;
+    --sidebar-ring: 351 71% 55%;
+
+    --grouped-bg: 0 0% 6%;
+
+    --chart-1: 351 71% 55%;
+    --chart-2: 100 45% 35%;
+    --chart-3: 25 85% 65%;
+    --chart-4: 210 40% 60%;
+    --chart-5: 280 60% 60%;
   }
-  button {
-    background-color: #f9f9f9;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Vista de teléfono: se comporta como una app nativa de iOS.
+   - Capa funcional (barras) con vidrio; el contenido va debajo, sin vidrio.
+   - Áreas seguras, objetivos táctiles de 44 pt y texto base de 17 pt.
+   --------------------------------------------------------------------------- */
+:root {
+  --navbar-h: 0px;
+  --tabbar-h: 0px;
+}
+
+@media (max-width: 767px) {
+  :root {
+    --navbar-h: calc(2.75rem + env(safe-area-inset-top));
+    /* barra flotante: 60 px + 8 px de margen + área segura + aire */
+    --tabbar-h: calc(5.25rem + env(safe-area-inset-bottom));
+  }
+
+  /* 17 pt es el tamaño de lectura por defecto en iOS; todo lo en rem escala con él. */
+  html {
+    font-size: 106.25%;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    overscroll-behavior-y: none;
+  }
+
+  /* Título grande: lo escribe cada página como h1 y la barra superior lo toma al hacer scroll. */
+  main h1[class] {
+    font-size: 2rem;
+    line-height: 2.4rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+  }
+
+  /* El mínimo legible en iOS es 11 pt. */
+  [class*="text-[10px]"],
+  [class*="text-[9px]"] {
+    font-size: 0.6875rem !important;
+  }
+}
+
+@media (hover: none) and (pointer: coarse) {
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+  button,
+  [role="button"],
+  a,
+  label,
+  summary {
+    touch-action: manipulation;
+  }
+}
+
+.glass {
+  background: hsl(var(--background) / 0.72);
+  -webkit-backdrop-filter: blur(24px) saturate(1.5);
+  backdrop-filter: blur(24px) saturate(1.5);
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .glass {
+    background: hsl(var(--background));
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+@media (prefers-contrast: more) {
+  .glass {
+    background: hsl(var(--background));
+    border-color: hsl(var(--foreground) / 0.45) !important;
+  }
+}
+
+.no-select {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+/* Hojas inferiores: en teléfono los diálogos suben desde abajo. */
+@keyframes sheet-in {
+  from {
+    transform: translateY(100%);
+  }
+}
+
+@keyframes sheet-out {
+  to {
+    transform: translateY(100%);
+  }
+}
+
+@media (max-width: 639px) {
+  [data-sheet][data-state="open"] {
+    animation: sheet-in 0.34s cubic-bezier(0.32, 0.72, 0, 1) both !important;
+  }
+  [data-sheet][data-state="closed"] {
+    animation: sheet-out 0.22s cubic-bezier(0.4, 0, 1, 1) both !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-sheet][data-state] {
+    animation-duration: 0.01ms !important;
   }
 }

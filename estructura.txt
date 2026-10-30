@@ -1,0 +1,171 @@
+ESTRUCTURA DE: C:\Users\benja\Documentos\GitHub\meets
+
+📁 backend/
+    📁 backend/
+        📄 __init__.py
+        📄 asgi.py
+        📄 settings.py
+        📄 urls.py
+        📄 views.py
+        📄 wsgi.py
+    📄 backup_completo.json
+    📁 comprobantes_pagos/
+        📄 aa.jpg
+        📄 Flyer_postres_repostería_moderno_café.png
+    📁 core/
+        📄 __init__.py
+        📄 admin.py
+        📄 apps.py
+        📁 migrations/
+            📄 0001_initial.py
+            📄 0002_pagofactura.py
+            📄 0003_alter_factura_total.py
+            📄 0004_entradaproducto.py
+            📄 0005_entradaproducto_cantidad_unidades.py
+            📄 0006_detallepedido_margen_detallepedido_total_costo.py
+            📄 0007_alter_detallepedido_costo_por_kilo.py
+            📄 0008_pedido_total.py
+            📄 0009_detallepedido_facturas_entradaproducto_factura_and_more.py
+            📄 0010_alter_entradaproducto_factura.py
+            📄 0011_alter_pedido_estado.py
+            📄 0012_alter_detallepedido_cantidad_kilos_and_more.py
+            📄 0013_pedido_recibo_pedido_tipo_recibo.py
+            📄 0014_proveedor_alter_factura_proveedor.py
+            📄 0015_producto_peso_minimo.py
+            📄 0016_alter_producto_estado.py
+            📄 0017_pagovendedor_tipo.py
+            📄 0018_alter_cliente_email.py
+            📄 0019_vendedor_user.py
+            📄 __init__.py
+        📄 models.py
+        📄 serializers.py
+        📄 tests.py
+        📄 urls.py
+        📄 views.py
+    📄 db.sqlite3
+    📄 db_backup_seguro.sqlite3
+    📄 manage.py
+📄 backup_completo.json
+📄 docker-compose.yml
+📄 Dockerfile
+📄 Dockerfile.frontend
+📁 docs/
+    📄 commands.md
+📄 estructura.txt
+📁 frontend/
+    📄 bun.lockb
+    📄 components.json
+    📄 eslint.config.js
+    📄 index.html
+    📄 package-lock.json
+    📄 package.json
+    📄 postcss.config.js
+    📁 public/
+        📄 favicon.ico
+        📄 placeholder.svg
+        📄 robots.txt
+    📄 README.md
+    📄 README_FRONTEND.md
+    📁 src/
+        📄 App.tsx
+        📁 components/
+            📁 layout/
+                📄 Layout.tsx
+                📄 Sidebar.tsx
+            📁 shared/
+                📄 ErrorMessage.tsx
+                📄 LoadingSpinner.tsx
+                📄 StatCard.tsx
+            📁 ui/
+                📄 accordion.tsx
+                📄 alert-dialog.tsx
+                📄 alert.tsx
+                📄 aspect-ratio.tsx
+                📄 avatar.tsx
+                📄 badge.tsx
+                📄 breadcrumb.tsx
+                📄 button.tsx
+                📄 calendar.tsx
+                📄 card.tsx
+                📄 carousel.tsx
+                📄 chart.tsx
+                📄 checkbox.tsx
+                📄 collapsible.tsx
+                📄 command.tsx
+                📄 context-menu.tsx
+                📄 dialog.tsx
+                📄 drawer.tsx
+                📄 dropdown-menu.tsx
+                📄 form.tsx
+                📄 hover-card.tsx
+                📄 input-otp.tsx
+                📄 input.tsx
+                📄 label.tsx
+                📄 menubar.tsx
+                📄 navigation-menu.tsx
+                📄 pagination.tsx
+                📄 popover.tsx
+                📄 progress.tsx
+                📄 radio-group.tsx
+                📄 resizable.tsx
+                📄 scroll-area.tsx
+                📄 select.tsx
+                📄 separator.tsx
+                📄 sheet.tsx
+                📄 sidebar.tsx
+                📄 skeleton.tsx
+                📄 slider.tsx
+                📄 sonner.tsx
+                📄 switch.tsx
+                📄 table.tsx
+                📄 tabs.tsx
+                📄 textarea.tsx
+                📄 toast.tsx
+                📄 toaster.tsx
+                📄 toggle-group.tsx
+                📄 toggle.tsx
+                📄 tooltip.tsx
+                📄 use-toast.ts
+        📁 contexts/
+            📄 AuthContext.tsx
+        📁 hooks/
+            📄 use-mobile.tsx
+            📄 use-toast.ts
+        📄 index.css
+        📁 lib/
+            📄 utils.ts
+        📄 main.tsx
+        📁 pages/
+            📄 a.py
+            📄 Clientes.tsx
+            📄 Dashboard.tsx
+            📄 Facturas.tsx
+            📄 FormularioPedido.tsx
+            📄 GestioPagosVendedor.tsx
+            📄 Login.tsx
+            📄 MovimientosInventario.tsx
+            📄 NotFound.tsx
+            📄 PedidoNuevo.tsx
+            📄 Pedidos.tsx
+            📄 Productos.tsx
+            📄 Stock.tsx
+        📁 services/
+            📄 api.ts
+        📁 types/
+            📄 index.ts
+        📄 vite-env.d.ts
+    📄 tailwind.config.ts
+    📄 tsconfig.app.json
+    📄 tsconfig.json
+    📄 tsconfig.node.json
+    📄 vite.config.ts
+📄 generar.py
+📄 LICENSE
+📁 meatme-dash-pro/
+    📁 src/
+        📁 lib/
+            📄 utils.ts
+📄 reading
+📄 README.md
+📄 requirements.txt
+📄 todo.md

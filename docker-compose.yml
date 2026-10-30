@@ -4,19 +4,51 @@ services:
       context: .
       dockerfile: Dockerfile.frontend
     ports:
-      - 5173:5173
-    develop:
-      watch:
-        - action: sync
-          path: ./frontend/
-          target: /frontend
-          ignore:
-            - node_modules
+      - "5173:5173"
+    volumes:
+          - ./frontend:/app           # CAMBIO: De /frontend a /app
+          - /app/node_modules
+    environment:
+      - CHOKIDAR_USEPOLLING=true # Obligatorio para detectar cambios en Windows/WSL
+    command: npm run dev -- --host 0.0.0.0
 
   backend:
     build:
       context: .
+      dockerfile: Dockerfile # Asegúrate de que apunte a tu Dockerfile de Django
     ports:
-      - 8000:8000
+      - "8000:8000"
     volumes:
-      - ./backend:/backend
+          - ./backend:/app
+    environment:
+      - DB_HOST=db
+      - DB_NAME=db
+      - DB_USER=user
+      - DB_PASS=localdevpw
+      - PYTHONUNBUFFERED=1 # Permite ver los logs de Django en tiempo real
+    command: >
+      sh -c "until pg_isready -h db -U user; do sleep 2; done &&
+            python manage.py migrate &&
+            python manage.py runserver 0.0.0.0:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:17.1
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=db
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=localdevpw
+    healthcheck:
+      test: ["CMD", "pg_isready", "-q", "-d", "db", "-U", "user"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  db-data:

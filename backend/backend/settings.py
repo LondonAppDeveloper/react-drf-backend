@@ -9,12 +9,20 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
+from datetime import timedelta
+
+import dj_database_url
+import os
+
 
 from pathlib import Path
 
+from dotenv import load_dotenv
+load_dotenv()
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+FRONTEND_URL = os.environ.get("FRONTEND_URL")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -25,7 +33,12 @@ SECRET_KEY = 'django-insecure-pdntuw_59%zf&kumx&!!9!f=lv4z&_o$549^8*=n6po0z)@-#l
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+# Busca estas líneas o agrégalas:
+MEDIA_URL = '/media/'
+# Esto le dice a Django que los archivos están en la carpeta 'comprobantes_pagos'
+MEDIA_ROOT = os.path.join(BASE_DIR.parent, 'comprobantes_pagos')
+
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -38,13 +51,15 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'corsheaders',
-    'rest_framework'
+    'rest_framework',
+    'core'
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -76,14 +91,24 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+# Intentamos cargar la configuración de Railway
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(
+        default=os.environ.get('DATABASE_URL'),
+        conn_max_age=600
+    )
 }
 
-
+# PLAN B: Si no hay DATABASE_URL (estamos en local con Docker), sobreescribimos
+if not os.environ.get('DATABASE_URL'):
+    DATABASES['default'] = {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.environ.get("DB_NAME", "db"),
+        "USER": os.environ.get("DB_USER", "user"),
+        "PASSWORD": os.environ.get("DB_PASS", "localdevpw"),
+        "HOST": os.environ.get("DB_HOST", "db"),
+        "PORT": os.environ.get("DB_PORT", "5432"),
+    }
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
@@ -114,15 +139,68 @@ USE_I18N = True
 
 USE_TZ = True
 
+# Whitenoise para servir estáticos en Railway
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+# 3. Archivos estáticos y Media
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR.parent, 'comprobantes_pagos')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CORS_ALLOWED_ORIGINS = ["http://localhost:5173"]
+# 2. Seguridad de CORS (Vital para que React conecte)
+CORS_ALLOWED_ORIGINS = ["http://localhost:5173", "http://127.0.0.1:5173"]
+CSRF_TRUSTED_ORIGINS = ["http://localhost:5173"]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+}
+
+if FRONTEND_URL:
+    # Si la URL no tiene el protocolo, se lo agregamos para que Django no dé error
+    if not FRONTEND_URL.startswith("http"):
+        full_url = f"https://{FRONTEND_URL}"
+    else:
+        full_url = FRONTEND_URL
+    
+    # Agregamos la URL limpia a las listas
+    if full_url not in CORS_ALLOWED_ORIGINS:
+        CORS_ALLOWED_ORIGINS.append(full_url)
+    if full_url not in CSRF_TRUSTED_ORIGINS:
+        CSRF_TRUSTED_ORIGINS.append(full_url)
+
+# Agregamos la URL del propio backend a CSRF (necesario para el Admin y subidas)
+BACKEND_URL = os.environ.get("RAILWAY_STATIC_URL")
+if BACKEND_URL:
+    CSRF_TRUSTED_ORIGINS.append(f"https://{BACKEND_URL}")
+
+
+# Confía en el proxy de Railway para identificar conexiones seguras (HTTPS)
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+# Permite que se envíen credenciales (si usas cookies o Auth)
+CORS_ALLOW_CREDENTIALS = True
+
+# Si sigues con problemas de CORS en modo prueba, puedes habilitar esto temporalmente:
+# CORS_ALLOW_ALL_ORIGINS = True
+
+SIMPLE_JWT = {
+    'AUTH_HEADER_TYPES': ('Bearer',), # <--- ESTO DEBE COINCIDIR CON TU FRONTEND
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1), # Opcional: para que no expire tan rápido en desarrollo
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7), # Sesión completa: hasta 7 días sin volver a loguearse
+}
+
+print(f"DEBUG: DATABASE_URL cargada -> {bool(os.environ.get('DATABASE_URL'))}")
+print(f"DEBUG: FRONTEND_URL -> {os.environ.get('FRONTEND_URL')}")
